@@ -7,7 +7,7 @@ user = get_user_model()
 
 class Color(models.Model):
     """Модель цветов папок"""
-    color = models.TextField('Цвет папки', max_length=100)
+    color = models.TextField('Цвет папки', max_length=100, default='yellow')
 
     def __str__(self):
         return self.color
@@ -19,14 +19,14 @@ class Color(models.Model):
 
 class Folder(MPTTModel):
     """Модель папок"""
-    label = models.TextField('Название', max_length=100),
+    label = models.TextField('Название', max_length=100)
     user = models.ForeignKey(
         user,
         verbose_name="Пользователь",
         on_delete=models.CASCADE,
         blank=False,
         null=False
-    ),
+    )
     parent = TreeForeignKey(
         'self',
         verbose_name="Родительская папка",
@@ -39,6 +39,7 @@ class Folder(MPTTModel):
         Color,
         verbose_name="Цвет папки",
         on_delete=models.SET_NULL,
+        default=Color.color,
         null=True,
         blank=True
     )
@@ -53,9 +54,10 @@ class Folder(MPTTModel):
 
 class File(models.Model):
     """Модель файлов"""
-    label = models.TextField('Название', max_length=100),
-    filesize = models.PositiveIntegerField('Размер файла'),
-    messages = models.TextField('Ccылки на чанки в ТГ', max_length=500),
+    label = models.TextField('Название', max_length=100)
+    filesize = models.PositiveIntegerField('Размер файла', default=1)
+    messages = models.TextField('Ccылки на чанки в ТГ', max_length=500)
+    date = models.DateTimeField('Дата создания', default=timezone.now)
     folder = models.ForeignKey(
         Folder,
         verbose_name='Папка',
