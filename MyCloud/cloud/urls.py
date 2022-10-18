@@ -1,7 +1,9 @@
 from django.urls import path
 from .views import *
 urlpatterns = [
-    path('folder/list/<int:pk>/', FolderContextView.as_view()),
-    path('folder/<int:pk>/', FolderUDVIew.as_view()),
-    path('test/<int:pk>/', Context.as_view())
+    path('folder/list/<int:pk>/', FolderListApiView.as_view()),
+    path('folder/<int:pk>/', FolderApiView.as_view()),
+    path('file/list/<int:pk>/', FolderListApiView.as_view()),
+    path('file/<int:pk>/', FolderApiView.as_view()),
+
 ]

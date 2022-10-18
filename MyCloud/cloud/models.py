@@ -7,7 +7,7 @@ user = get_user_model()
 
 class Color(models.Model):
     """Модель цветов папок"""
-    color = models.TextField('Цвет папки', max_length=100, default='yellow')
+    color = models.TextField('Цвет папки', max_length=100)
 
     def __str__(self):
         return self.color
@@ -39,7 +39,6 @@ class Folder(MPTTModel):
         Color,
         verbose_name="Цвет папки",
         on_delete=models.SET_NULL,
-        default=Color.color,
         null=True,
         blank=True
     )
@@ -58,6 +57,13 @@ class File(models.Model):
     filesize = models.PositiveIntegerField('Размер файла', default=1)
     messages = models.TextField('Ccылки на чанки в ТГ', max_length=500)
     date = models.DateTimeField('Дата создания', default=timezone.now)
+    user = models.ForeignKey(
+        user,
+        verbose_name="Пользователь",
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False
+    )
     folder = models.ForeignKey(
         Folder,
         verbose_name='Папка',
