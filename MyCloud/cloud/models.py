@@ -68,8 +68,8 @@ class File(models.Model):
         Folder,
         verbose_name='Папка',
         on_delete=models.CASCADE,
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
     )
 
     def __str__(self):

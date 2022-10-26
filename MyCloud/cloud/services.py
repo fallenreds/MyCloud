@@ -43,32 +43,24 @@ class ManyModelApiView(generics.GenericAPIView):
         return Response(response_data)
 
 
-class CRUDApiView(mixins.UpdateModelMixin,
-               mixins.DestroyModelMixin,
-               mixins.RetrieveModelMixin,
-               mixins.CreateModelMixin,
-               generics.GenericAPIView,
-               ):
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
 
 
-class OwnerListApiView(generics.ListAPIView):
+class OwnerListCreateApiView(generics.ListCreateAPIView):
     """
-        Спискок всех подпапок текущей папки.
-        list проверяет пренадлежность записи к текущему пользователю.
-        """
+    List of all model objects by 'pk'
+    It is obligatory to override the get_queryset method.
+    For example: self.queryset.filter(parent=self.kwargs['pk'])
+    """
 
     def is_owner(self):
+        """
+        Checks if the user is the owner.
+
+        Gets the first object of the queryset list and checks if it belongs to a user.
+        WARNING: you need to override the get_queryset() method, for example:
+            def get_queryset(self, *args, **kwargs):
+                return self.queryset.filter(field=self.kwargs['pk'])
+        """
         if queryset := self.get_queryset().first():
             if queryset.user == self.request.user:
                 return True
@@ -77,5 +69,4 @@ class OwnerListApiView(generics.ListAPIView):
         if self.is_owner():
             return super().list(request, *args, **kwargs)
         raise Http404
-
 
