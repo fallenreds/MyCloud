@@ -67,3 +67,15 @@ class FileApiView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
     queryset = Folder.objects.all()
     serializer_class = FolderSerializer
+
+
+class CurrentUserApiView(generics.RetrieveAPIView):
+    User = get_user_model()
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+
+        return self.queryset.filter(id=self.kwargs['pk'])
+#TODO сделать сегодня авторизацию, заробратся с моделю юзера

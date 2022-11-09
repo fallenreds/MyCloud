@@ -1,0 +1,4 @@
+*.pyc
+MyCloud/__pycache__
+venvMyCloud
+.idea

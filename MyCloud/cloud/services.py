@@ -43,8 +43,6 @@ class ManyModelApiView(generics.GenericAPIView):
         return Response(response_data)
 
 
-
-
 class OwnerListCreateApiView(generics.ListCreateAPIView):
     """
     List of all model objects by 'pk'
