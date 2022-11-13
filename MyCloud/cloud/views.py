@@ -3,6 +3,9 @@ from .serializers import *
 from rest_framework import generics, mixins
 from rest_framework.permissions import *
 """
+
+from rest_framework.views import APIView
+
 from .permission import IsOwner
 from .services import *
 
@@ -86,4 +89,33 @@ class CurrentUserApiView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(id=self.kwargs['pk'])
-#TODO сделать сегодня авторизацию, заробратся с моделю юзера
+
+
+
+
+class Test(OwnerListCreateApiView):
+    permission_classes = [IsAuthenticated, ]
+    queryset = File.objects.all()
+    serializer_class = FileSerializer
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self, *args, **kwargs):
+        return self.queryset.filter(folder=self.kwargs['pk'])
+
+    def perform_create(self, serializer):
+        serializer.save(folder=Folder.objects.get(id=self.kwargs['pk']))
+
+class GetFileView(APIView):
+
+    def get_files(self):
+        return (file for file in self.request.FILES.values())
+
+    def post(self, request, *args, **kwargs):
+        files = self.get_files()
+        for file in files:
+            pass
+        return FileListCreateApiView()
+
+

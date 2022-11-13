@@ -9,6 +9,6 @@ urlpatterns = [
     path('file/<int:pk>/', FileApiView.as_view()),
     path('file/', FileNullFolderApiView.as_view()),
 
-    path('user/<int:pk>/', CurrentUserApiView.as_view())
+    path('test/<int:pk>/', GetFileView.as_view())
 
 ]

@@ -25,3 +25,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = '__all__'
+
+
+class TestSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
+
+# class TestSerializer(serializers.ModelSerializer):
+#     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+#     file = serializers.FileField(blank=True, default='')
+#
+#     class Meta:
+#         model = File
+#         fields = ('id', 'label', 'filesize', 'messages', 'date', 'folder_id', 'user','file')
