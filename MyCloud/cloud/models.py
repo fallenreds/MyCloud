@@ -55,7 +55,7 @@ class File(models.Model):
     """Модель файлов"""
     label = models.TextField('Название', max_length=100)
     filesize = models.PositiveIntegerField('Размер файла', default=1)
-    messages = models.TextField('Ccылки на чанки в ТГ', max_length=500)
+    messages = models.TextField('Ccылки на чанки в ТГ', max_length=500, null=True, blank=True)
     date = models.DateTimeField('Дата создания', default=timezone.now)
     user = models.ForeignKey(
         user,
