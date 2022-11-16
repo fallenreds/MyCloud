@@ -5,7 +5,7 @@ from rest_framework.permissions import *
 """
 
 from rest_framework.views import APIView
-
+from rest_framework import status
 from .permission import IsOwner
 from .services import *
 
@@ -97,25 +97,39 @@ class Test(OwnerListCreateApiView):
     permission_classes = [IsAuthenticated, ]
     queryset = File.objects.all()
     serializer_class = FileSerializer
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
     def get_queryset(self, *args, **kwargs):
         return self.queryset.filter(folder=self.kwargs['pk'])
-
-    def perform_create(self, serializer):
-        serializer.save(folder=Folder.objects.get(id=self.kwargs['pk']))
-
-class GetFileView(APIView):
 
     def get_files(self):
         return (file for file in self.request.FILES.values())
 
+    def get_file_name(self):
+        return self.request.FILES['name']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=kwargs['data'], many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
     def post(self, request, *args, **kwargs):
         files = self.get_files()
+        data = []
         for file in files:
-            pass
-        return FileListCreateApiView()
+            data.append({
+                'label': file.name,
+                'filesize': file.size
+            })
+        kwargs['data'] = data
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        folder = Folder.objects.get(id=self.kwargs['pk'])
+
+        serializer.save(folder=folder)
+
+
 
 
