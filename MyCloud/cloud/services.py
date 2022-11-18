@@ -68,3 +68,4 @@ class OwnerListCreateApiView(generics.ListCreateAPIView):
             return super().list(request, *args, **kwargs)
         raise Http404
 
+
